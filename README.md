@@ -1,10 +1,10 @@
-# Yet Another Sample App (YASA)
+# Human Resources Assistant
 
-![Build](https://github.com/ravendb/sample-blueprint/actions/workflows/build.yml/badge.svg)
+![Build](https://github.com/ravendb/samples-hr/actions/workflows/build.yml/badge.svg)
 
 ## Overview
 
-A sample application providing a simple online shop expierience. It leverages [RavenDB](https://ravendb.net) database as its core database.
+A sample application providing a human resources assistant chatbot. It leverages [RavenDB](https://ravendb.net) database and [RavenDB AI](https://docs.ravendb.net/ai-integration/ai-integration_start).
 
 <img width="950" height="590" alt="screenshot" src="https://github.com/user-attachments/assets/108cbb63-e937-4b40-9cb0-28123fc93125" />
 
