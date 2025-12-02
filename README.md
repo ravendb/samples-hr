@@ -6,7 +6,7 @@
 
 A sample application providing a human resources assistant chatbot. It leverages [RavenDB](https://ravendb.net) database and [RavenDB AI](https://docs.ravendb.net/ai-integration/ai-integration_start).
 
-![](.\.github\assets\samples_hr.png)
+![](.github/assets/samples_hr.png)
 
 
 ## Live Demo
@@ -53,7 +53,7 @@ Rate limiting is implemented at two levels:
 - **Global** - limits total requests across all users (15-minute window)
 
 
-![](./.github/assets/usage_limit.png)
+![](/.github/assets/usage_limit.png)
 
 ## Run locally
 
