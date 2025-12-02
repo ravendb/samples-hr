@@ -2,7 +2,7 @@ name: Build
 
 env:
   NODE_VERSION: '22.x'
-  DOTNET_VERSION: '8.0.x'
+  DOTNET_VERSION: '10.0.x'
 
 on:
   workflow_dispatch:
@@ -13,9 +13,6 @@ on:
 
 permissions:
   contents: read
-  deployments: write
-  pages: write
-  id-token: write
 
 jobs:
   backend:
@@ -27,11 +24,28 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
   frontend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sampleshr-frontend
     steps:
       - uses: actions/checkout@v5
-      
-      - uses: actions/setup-node@v6
+
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: sampleshr-frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
