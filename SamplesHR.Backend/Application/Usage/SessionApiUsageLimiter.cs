@@ -15,11 +15,9 @@ public class SessionApiUsageLimiter
     {
         _store = store;
 
-        var raw = Environment.GetEnvironmentVariable(Constants.EnvVars.MaxSessionRequestsPer30Seconds);
-        if (string.IsNullOrWhiteSpace(raw))
-            throw new InvalidOperationException(
-                $"Missing \"{Constants.EnvVars.MaxSessionRequestsPer30Seconds}\" environment variable.");
-
+        var raw = Environment.GetEnvironmentVariable(Constants.EnvVars.MaxSessionRequestsPer30Seconds)
+            ?? "5";
+        
         if (!int.TryParse(raw, out _maxRequestsPer30Seconds))
             throw new InvalidOperationException(
                 $"Invalid integer in \"{Constants.EnvVars.MaxSessionRequestsPer30Seconds}\": {raw}");

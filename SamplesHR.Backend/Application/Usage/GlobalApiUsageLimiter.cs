@@ -13,11 +13,7 @@ public class GlobalApiUsageLimiter
     {
         _store = store;
 
-        var raw = Environment.GetEnvironmentVariable(Constants.EnvVars.MaxGlobalRequestsPer15Minutes);
-        if (string.IsNullOrWhiteSpace(raw))
-            throw new InvalidOperationException(
-                $"Missing \"{Constants.EnvVars.MaxGlobalRequestsPer15Minutes}\" environment variable.");
-
+        var raw = Environment.GetEnvironmentVariable(Constants.EnvVars.MaxGlobalRequestsPer15Minutes) ?? "100";
         if (!int.TryParse(raw, out _maxRequestsPer15Minutes))
             throw new InvalidOperationException(
                 $"Invalid integer in \"{Constants.EnvVars.MaxGlobalRequestsPer15Minutes}\": {raw}");
