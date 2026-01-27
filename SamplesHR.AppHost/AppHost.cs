@@ -1,9 +1,24 @@
+using CommunityToolkit.Aspire.Hosting.RavenDB;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
-var ravenServer = builder.AddRavenDB("ravendb")
+var license = Environment.GetEnvironmentVariable("SAMPLES_HR_RAVEN_LICENSE");
+
+var settings = RavenDBServerSettings.Unsecured();
+if (license != null)
+{
+    // Use the license from the environmental variable
+    settings.WithLicense(license);
+}
+
+// High enough so that they don't collide with other local things run on 8080 etc
+settings.Port = 9349;
+settings.TcpPort = 41349;
+
+var ravenServer = builder
+    .AddRavenDB("ravendb", settings)
     .WithImage("ravendb/ravendb", "7.1-latest")
-    .WithIconName("Database")
-    .WithEnvironment("RAVEN_LICENSE", Environment.GetEnvironmentVariable("SAMPLES_HR_RAVEN_LICENSE"));
+    .WithIconName("Database");
 
 const string dbName = "HRAssistant";
 
