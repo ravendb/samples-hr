@@ -75,6 +75,7 @@ If you want to run the application locally, please follow the steps:
    SAMPLES_HR_MAX_GLOBAL_REQUESTS_PER_15_MINUTES=100
    SAMPLES_HR_MAX_SESSION_REQUESTS_PER_30_SECONDS=5
    ```
+1. `npm install` in `/sampleshr-frontend` to get all the needed packages
 1. Run the .NET Aspire AppHost:
    ```bash
    aspire run
