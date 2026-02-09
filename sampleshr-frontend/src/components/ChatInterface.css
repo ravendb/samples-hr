@@ -202,6 +202,29 @@
     color: var(--primary-main);
 }
 
+.speak-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 4px;
+    margin-top: 8px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--primary-main);
+}
+
+.speak-button:hover {
+    opacity: 1;
+}
+
+.speak-button::before {
+    content: "🔊";
+}
+
 .message-content em {
     font-style: italic;
     opacity: 0.9;
@@ -302,3 +325,41 @@
     font-style: italic;
 }
 
+.voice-button {
+    background: var(--background-accent);
+    color: var(--text-purple);
+    border: 1px solid var(--border-accent);
+    border-radius: var(--border-radius-medium);
+    padding: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-size: 1.2rem;
+}
+
+.voice-button:hover:not(:disabled) {
+    background: var(--primary-light);
+    color: white;
+    border-color: var(--primary-main);
+}
+
+.voice-button.listening {
+    background: #ff4d4d;
+    color: white;
+    border-color: #ff3333;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 77, 77, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 77, 77, 0);
+    }
+}

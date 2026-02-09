@@ -37,7 +37,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ onRateLimitError }
     title: '',
     description: ''
   });
+  const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
+  const handleSendMessageRef = useRef<any>(null);
+
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -211,6 +215,25 @@ Hello, **${employee.name}**, how can I help you today?`,
     return signatures;
   }
 
+  const speak = (text: string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.resume();
+      const cleanText = text.replace(/[#*`_~]/g, '');
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const unlockSpeech = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.resume();
+      const utterance = new SpeechSynthesisUtterance('');
+      utterance.volume = 0;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   const interactWithModel = async (requestBody: ChatRequest, botMessageId: string): Promise<ChatResponse> => {
     while (true) {
       const response = await sendToModel(requestBody, botMessageId);
@@ -224,19 +247,22 @@ Hello, **${employee.name}**, how can I help you today?`,
     }
   };
 
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim() || isLoading || !selectedEmployee) return;
+  const handleSendMessage = async (explicitMessage?: string) => {
+    const messageToSend = explicitMessage || inputMessage;
+    if (!messageToSend.trim() || isLoading || !selectedEmployee) return;
 
     // Normal message handling
     const userMessage: Message = {
       id: uuidv4(),
-      text: inputMessage,
+      text: messageToSend,
       isUser: true,
       timestamp: new Date(),
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setInputMessage('');
+    if (!explicitMessage) {
+      setInputMessage('');
+    }
     setIsLoading(true);
 
     try {
@@ -252,21 +278,29 @@ Hello, **${employee.name}**, how can I help you today?`,
       try {
         let response = await interactWithModel({
           conversationId: conversationId || undefined,
-          message: inputMessage,
+          message: messageToSend,
           employeeId: selectedEmployee.id,
           signatures: [],
         }, botMessageId);
+        
+        const answer = response!.answer || "No answer from the model.";
+        
         setMessages(prev => prev.map(m =>
           m.id === botMessageId ? {
             ...m,
-            text: response!.answer || "No answer from the mode.",
+            text: answer,
             followups: response!.followups,
           } : m
         ));
+
+        // Read the response aloud
+        speak(answer);
+
         if (response!.conversationId) {
           setConversationId(response!.conversationId);
         }
       } catch (err) {
+
         console.log(err);
         if (err instanceof RateLimitError) {
           const isSession = err.response.code === RateLimitErrorCode.SessionLimitExceeded;
@@ -302,6 +336,52 @@ Hello, **${employee.name}**, how can I help you today?`,
     }
   };
 
+  useEffect(() => {
+    handleSendMessageRef.current = handleSendMessage;
+  }, [handleSendMessage]);
+
+  useEffect(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        if (transcript && handleSendMessageRef.current) {
+          handleSendMessageRef.current(transcript);
+        }
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, [selectedEmployee, conversationId]);
+
+  const toggleListening = () => {
+    unlockSpeech();
+    if (isListening) {
+      recognitionRef.current?.stop();
+    } else {
+      setIsListening(true);
+      recognitionRef.current?.start();
+    }
+  };
+
   const handleFollowupClick = (followup: string) => {
     setInputMessage(followup);
   };
@@ -309,6 +389,7 @@ Hello, **${employee.name}**, how can I help you today?`,
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
+      unlockSpeech();
       handleSendMessage();
     }
   };
@@ -357,7 +438,19 @@ Hello, **${employee.name}**, how can I help you today?`,
               {message.isUser ? (
                 message.text
               ) : (
+                <>
                   <ReactMarkdown>{message.text}</ReactMarkdown>
+                  <button 
+                    className="speak-button" 
+                    onClick={() => {
+                        unlockSpeech();
+                        speak(message.text);
+                    }}
+                    title="Read aloud"
+                  >
+                    Play Audio
+                  </button>
+                </>
               )}
             </div>
 
@@ -400,8 +493,19 @@ Hello, **${employee.name}**, how can I help you today?`,
             disabled={isLoading || !selectedEmployee}
           />
           <button
+            className={`voice-button ${isListening ? 'listening' : ''}`}
+            onClick={toggleListening}
+            disabled={isLoading || !selectedEmployee}
+            title={isListening ? "Listening..." : "Voice Input"}
+          >
+            🎤
+          </button>
+          <button
             className="send-button"
-            onClick={handleSendMessage}
+            onClick={() => {
+              unlockSpeech();
+              handleSendMessage();
+            }}
             disabled={isLoading || !inputMessage.trim() || !selectedEmployee}
           >
             Send
