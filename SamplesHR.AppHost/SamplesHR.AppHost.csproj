@@ -9,8 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.NodeJs" Version="9.5.2" />
-    <PackageReference Include="CommunityToolkit.Aspire.Hosting.RavenDB" Version="13.1.1" />
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.NodeJs" />
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.RavenDB" />
   </ItemGroup>
 
   <ItemGroup>

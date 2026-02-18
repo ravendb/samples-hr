@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Aspire.RavenDB.Client" Version="13.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
-    <PackageReference Include="RavenDB.Client" Version="7.1.4" />
+    <PackageReference Include="CommunityToolkit.Aspire.RavenDB.Client" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="RavenDB.Client" />
   </ItemGroup>
 
   <ItemGroup>
