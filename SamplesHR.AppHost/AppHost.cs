@@ -17,7 +17,7 @@ settings.TcpPort = 41349;
 
 var ravenServer = builder
     .AddRavenDB("ravendb", settings)
-    .WithImage("ravendb/ravendb", "7.2-latest")
+    .WithImage("ravendb/ravendb-nightly", "7.2.2-nightly-20260324-0722-ubuntu.22.04-x64")
     .WithIconName("Database");
 
 const string dbName = "HRAssistant";
