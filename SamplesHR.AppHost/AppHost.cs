@@ -37,7 +37,7 @@ var backend = builder.AddProject<Projects.SamplesHR_Backend>("backend")
     path: "/api/seed/all",
     displayName: "Seed data",
     endpointName: "http",
-    commandOptions: new HttpCommandOptions()
+    commandOptions: new HttpCommandOptions
     {
         Description = "Seed the database with sample data",
         IconName = "databaseArrowUp",

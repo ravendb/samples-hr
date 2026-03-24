@@ -16,14 +16,17 @@ builder.AddRavenDBClient("HRAssistant", configureSettings: settings => settings.
 
 builder.Services.AddHostedService<RavenInitializer>();
 
-var frontendUrl = builder.Configuration[frontendHttpUrlConfigurationKey] ??
-                  throw new NullReferenceException("Frontend URL is not configured by Aspire properly.");
+var frontendUrl = (builder.Configuration[frontendHttpUrlConfigurationKey] ??
+                  throw new NullReferenceException("Frontend URL is not configured by Aspire properly."))
+                  .TrimEnd('/');
+
+string[] allowedOrigins = [frontendUrl];
 
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins(frontendUrl)
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
