@@ -1,3 +1,7 @@
+using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SamplesHR.Backend.Application.Usage;
 using SamplesHR.Backend.Hubs;
 using SamplesHR.Backend.Infrastructure.Middleware;
