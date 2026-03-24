@@ -73,7 +73,7 @@ namespace SamplesHR.Backend.Controllers
                         ExpirationInSec = 60 * 60 * 24 * 30 // 30 days
                     });
 
-                conversation.Handle<RaiseIssueArgs>("RaiseIssue", async (args) =>
+                conversation.Handle<RaiseIssueArgs, string>("RaiseIssue", async (args) =>
                 {
                     using var session = documentStore.OpenAsyncSession();
                     var issue = new HrIssue
