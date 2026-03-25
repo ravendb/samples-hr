@@ -25,6 +25,7 @@ export interface ChatRequest {
   message: string;
   employeeId: string;
   signatures: { toolId: string; content: string }[];
+  billId?: number;
 }
 
 export interface ChatResponse {
@@ -131,4 +132,22 @@ export const hrApi = {
 
   getEmployeesForDropdown: (): Promise<EmployeeDropdown[]> =>
     api.get('/api/HumanResourcesAgent/employees/dropdown').then(response => response.data),
+
+  getSampleBills: (): Promise<SampleBill[]> =>
+    api.get('/api/HumanResourcesAgent/bills/samples').then(response => response.data),
+
+  getBillImageUrl: (id: number): string =>
+    `${API_BASE_URL}/api/HumanResourcesAgent/bills/samples/${id}/image`,
 };
+
+// Business Trip types
+
+export interface SampleBill {
+  id: number;
+  vendor: string;
+  category: string;
+  amount: number;
+  date: string;
+  description: string;
+  imageResourceName: string;
+}

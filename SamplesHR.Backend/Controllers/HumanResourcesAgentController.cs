@@ -30,6 +30,29 @@ namespace SamplesHR.Backend.Controllers
     {
         private readonly JsonSerializerOptions _jsonOptions = jsonOptions.Value.JsonSerializerOptions;
 
+        [HttpGet("bills/samples")]
+        public ActionResult<SampleBill[]> GetSampleBills()
+        {
+            return Ok(SampleBillCatalog.Bills);
+        }
+
+        [HttpGet("bills/samples/{id:int}/image")]
+        public ActionResult GetSampleBillImage(int id)
+        {
+            var bill = SampleBillCatalog.Bills.FirstOrDefault(b => b.Id == id);
+            if (bill is null)
+                return NotFound();
+
+            var resourcePath = Path.Combine(
+                AppContext.BaseDirectory, "Resources", "Bills", bill.ImageResourceName);
+
+            if (!System.IO.File.Exists(resourcePath))
+                return NotFound("Bill image not found");
+
+            var stream = System.IO.File.OpenRead(resourcePath);
+            return File(stream, "image/png");
+        }
+
         [HttpPost("chat")]
         public async Task Chat([FromBody] ChatRequest request)
         {
@@ -78,6 +101,22 @@ namespace SamplesHR.Backend.Controllers
                         },
                         ExpirationInSec = 60 * 60 * 24 * 30 // 30 days
                     });
+
+                if (request.BillId is { } billId)
+                {
+                    var bill = SampleBillCatalog.Bills.FirstOrDefault(b => b.Id == billId);
+                    if (bill is not null)
+                    {
+                        var imagePath = Path.Combine(
+                            AppContext.BaseDirectory, "Resources", "Bills", bill.ImageResourceName);
+
+                        if (System.IO.File.Exists(imagePath))
+                        {
+                            var imageStream = System.IO.File.OpenRead(imagePath);
+                            conversation.AddAttachment(bill.ImageResourceName, imageStream, "image/png");
+                        }
+                    }
+                }
 
                 conversation.Handle<RaiseIssueArgs, string>("RaiseIssue", async (args) =>
                 {

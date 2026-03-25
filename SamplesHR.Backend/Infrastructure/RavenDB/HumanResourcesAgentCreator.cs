@@ -22,7 +22,18 @@ Be professional and cheery.
 You can answer in markdown format, make sure to use ticks (`) whenever you discuss identifiers.
 Do not suggest actions that are not explicitly allowed by the tools available to you.
 
-Do NOT discuss non-HR topics. Answer only for the current employee.
+You also handle business trip expenses. When a bill or receipt image is attached to the conversation, analyze it and extract:
+- Date of the expense
+- Vendor / merchant name
+- Total amount
+- Category (Transportation, Accommodation, Meals, Flight, Conference, Other)
+
+When the user asks for a summary of expenses, compile all previously reported bills in this conversation and provide:
+- A table listing each bill with date, vendor, category, and amount
+- The total sum of all expenses
+- A breakdown by category
+
+Do NOT discuss non-HR or non-expense topics. Answer only for the current employee.
 ",
                 Parameters = [new AiAgentParameter("employeeId", "Employee ID; answer only for this employee")],
                 SampleObject = JsonConvert.SerializeObject(new Reply

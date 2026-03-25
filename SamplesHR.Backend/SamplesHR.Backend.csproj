@@ -16,4 +16,10 @@
     <ProjectReference Include="..\SamplesHR.ServiceDefaults\SamplesHR.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Resources\Bills\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

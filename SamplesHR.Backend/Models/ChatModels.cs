@@ -6,6 +6,7 @@ public class ChatRequest
     public string Message { get; set; } = string.Empty;
     public string EmployeeId { get; set; } = string.Empty;
     public SignatureResponse[] Signatures { get; set; } = [];
+    public int? BillId { get; set; }
 }
 
 public class SignatureResponse

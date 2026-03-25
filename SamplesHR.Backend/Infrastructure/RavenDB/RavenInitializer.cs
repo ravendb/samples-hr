@@ -50,6 +50,7 @@ public class RavenInitializer(IDocumentStore store) : IHostedService
         
         // 3) AI AGENT
         await HumanResourcesAgentCreator.Create(store);
+
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

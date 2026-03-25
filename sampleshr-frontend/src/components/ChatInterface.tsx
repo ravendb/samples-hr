@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { hrApi, ChatRequest, ChatResponse, EmployeeDropdown, RateLimitError, RateLimitErrorCode } from '../api';
+import { hrApi, ChatRequest, ChatResponse, EmployeeDropdown, RateLimitError, RateLimitErrorCode, SampleBill } from '../api';
 import { SignatureDialog } from './SignatureDialog';
+import { BillSelectorDialog } from './BillSelectorDialog';
 import { RateLimitAlert } from './UsageCharts';
 import './ChatInterface.css';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,6 +13,7 @@ interface Message {
   isUser: boolean;
   timestamp: Date;
   followups?: string[];
+  billAttachment?: SampleBill;
 }
 
 interface ChatInterfaceProps {
@@ -38,6 +40,8 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ onRateLimitError }
     description: ''
   });
   const [isListening, setIsListening] = useState(false);
+  const [isBillDialogOpen, setIsBillDialogOpen] = useState(false);
+  const [pendingBill, setPendingBill] = useState<SampleBill | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
   const handleSendMessageRef = useRef<any>(null);
@@ -177,6 +181,11 @@ Hello, **${employee.name}**, how can I help you today?`,
     });
   };
 
+  const handleBillSelect = (bill: SampleBill) => {
+    setPendingBill(bill);
+    setIsBillDialogOpen(false);
+  };
+
   const sendToModel = async (requestBody: ChatRequest, botMessageId: string) => {
     let botText = '';
     return await hrApi.chat(
@@ -251,12 +260,16 @@ Hello, **${employee.name}**, how can I help you today?`,
     const messageToSend = explicitMessage || inputMessage;
     if (!messageToSend.trim() || isLoading || !selectedEmployee) return;
 
+    const billToSend = pendingBill;
+    setPendingBill(null);
+
     // Normal message handling
     const userMessage: Message = {
       id: uuidv4(),
       text: messageToSend,
       isUser: true,
       timestamp: new Date(),
+      billAttachment: billToSend || undefined,
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -270,7 +283,9 @@ Hello, **${employee.name}**, how can I help you today?`,
       let botMessageId = uuidv4();
       setMessages(prev => [...prev, {
         id: botMessageId,
-        text: '🤔 Processing your request...',
+        text: billToSend
+          ? '📎 Analyzing the attached receipt...'
+          : '🤔 Processing your request...',
         isUser: false,
         timestamp: new Date(),
       }]);
@@ -281,6 +296,7 @@ Hello, **${employee.name}**, how can I help you today?`,
           message: messageToSend,
           employeeId: selectedEmployee.id,
           signatures: [],
+          billId: billToSend?.id,
         }, botMessageId);
         
         const answer = response!.answer || "No answer from the model.";
@@ -434,6 +450,17 @@ Hello, **${employee.name}**, how can I help you today?`,
       <div className="messages-container">
         {messages.map((message) => (
           <div key={message.id} className={`message-bubble ${message.isUser ? 'user' : 'bot'}`}>
+            {message.billAttachment && (
+              <div className="bill-attachment-preview">
+                📎
+                <span className="bill-preview-name">
+                  {message.billAttachment.vendor}
+                </span>
+                <span className="bill-preview-amount">
+                  ${message.billAttachment.amount.toFixed(2)}
+                </span>
+              </div>
+            )}
             <div className="message-content">
               {message.isUser ? (
                 message.text
@@ -482,14 +509,42 @@ Hello, **${employee.name}**, how can I help you today?`,
       </div>
 
       <div className="input-container">
+        {pendingBill && (
+          <div className="bill-attachment-preview">
+            📎
+            <span className="bill-preview-name">{pendingBill.vendor}</span>
+            <span className="bill-preview-amount">
+              ${pendingBill.amount.toFixed(2)}
+            </span>
+            <button
+              className="bill-preview-remove"
+              onClick={() => setPendingBill(null)}
+              title="Remove attachment"
+            >
+              ✕
+            </button>
+          </div>
+        )}
         <div className="message-input-container">
+          <button
+            className="attach-button"
+            onClick={() => setIsBillDialogOpen(true)}
+            disabled={isLoading || !selectedEmployee}
+            title="Attach a bill"
+          >
+            📎
+          </button>
           <input
             className="message-input"
             type="text"
             value={inputMessage}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={selectedEmployee ? "Ask me anything about HR..." : "Please select your employee profile above to get started"}
+            placeholder={selectedEmployee
+              ? pendingBill
+                ? "Add a note about this bill and send..."
+                : "Ask me anything about HR or attach a bill..."
+              : "Please select your employee profile above to get started"}
             disabled={isLoading || !selectedEmployee}
           />
           <button
@@ -519,6 +574,12 @@ Hello, **${employee.name}**, how can I help you today?`,
         description={signatureDialog.description}
         onConfirm={handleSignatureConfirm}
         onCancel={handleSignatureCancel}
+      />
+
+      <BillSelectorDialog
+        isOpen={isBillDialogOpen}
+        onSelect={handleBillSelect}
+        onCancel={() => setIsBillDialogOpen(false)}
       />
     </div>
   );
