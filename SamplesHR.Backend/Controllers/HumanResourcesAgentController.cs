@@ -137,6 +137,26 @@ namespace SamplesHR.Backend.Controllers
                     return "Raised issue: " + issue.Id;
                 });
 
+                conversation.Handle<ReportBusinessTripExpenseArgs, string>("ReportBusinessTripExpense", async (args) =>
+                {
+                    using var session = documentStore.OpenAsyncSession();
+                    var bill = new BusinessTripBill
+                    {
+                        EmployeeId = request.EmployeeId,
+                        Vendor = args.Vendor,
+                        Category = args.Category,
+                        Amount = args.Amount,
+                        Currency = args.Currency,
+                        ExpenseDate = DateTime.TryParse(args.ExpenseDate, out var date) ? date : DateTime.UtcNow,
+                        Description = args.Description,
+                        ReportedAt = DateTime.UtcNow
+                    };
+                    await session.StoreAsync(bill);
+                    await session.SaveChangesAsync();
+
+                    return "Business trip expense reported: " + bill.Id;
+                });
+
                 conversation.Receive<SignDocumentArgs>("SignDocument", async (req, args) =>
                 {
                     using var session = documentStore.OpenAsyncSession();

@@ -28,7 +28,12 @@ You also handle business trip expenses. When a bill or receipt image is attached
 - Total amount
 - Category (Transportation, Accommodation, Meals, Flight, Conference, Other)
 
-When the user asks for a summary of expenses, compile all previously reported bills in this conversation and provide:
+Present a clear summary of the extracted bill details to the user.
+Then **always** ask the user explicitly: ""Would you like to report this bill as a business trip expense?""
+Wait for the user's confirmation before calling ReportBusinessTripExpense. 
+Do NOT call ReportBusinessTripExpense unless the user explicitly confirms (e.g. ""yes"", ""confirm"", ""go ahead"", ""report it"").
+
+When the user asks about their monthly expenses, use GetMonthlyBusinessTripExpenses to retrieve the data, then provide:
 - A table listing each bill with date, vendor, category, and amount
 - The total sum of all expenses
 - A breakdown by category
@@ -109,6 +114,17 @@ Do NOT discuss non-HR or non-expense topics. Answer only for the current employe
                     limit 5",
                         ParametersSampleObject = "{\"query\": [\"query terms to find matching document\"]}"
                     },
+                    new AiAgentToolQuery
+                    {
+                        Name = "GetMonthlyBusinessTripExpenses",
+                        Description = "Retrieve employee's business trip expenses within a given month (provide first and last day of the month)",
+                        Query = @"
+                    from BusinessTripBills
+                    where EmployeeId = $employeeId
+                        and ExpenseDate between $monthStart and $monthEnd
+                    order by ExpenseDate desc",
+                        ParametersSampleObject = "{\"monthStart\": \"yyyy-MM-dd\", \"monthEnd\": \"yyyy-MM-dd\"}"
+                    },
                 ],
                 Actions =
                 [
@@ -131,6 +147,20 @@ Do NOT discuss non-HR or non-expense topics. Answer only for the current employe
                         ParametersSampleObject = JsonConvert.SerializeObject(new SignDocumentArgs
                         {
                             Document = "unique-document-id (take from FindDocumentsToSign) ",
+                        })
+                    },
+                    new AiAgentToolAction
+                    {
+                        Name = "ReportBusinessTripExpense",
+                        Description = "Reports a business trip expense extracted from a bill/receipt image. Only call this AFTER the user explicitly confirms they want to report it.",
+                        ParametersSampleObject = JsonConvert.SerializeObject(new ReportBusinessTripExpenseArgs
+                        {
+                            Vendor = "Merchant or vendor name from the bill",
+                            Category = "Transportation | Accommodation | Meals | Flight | Conference | Other",
+                            Amount = 0.00m,
+                            Currency = "USD",
+                            ExpenseDate = "yyyy-MM-dd",
+                            Description = "Brief description of the expense"
                         })
                     },
                 ]
