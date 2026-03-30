@@ -8,17 +8,6 @@ A sample application providing a human resources assistant chatbot. It leverages
 
 ![](.github/assets/samples_hr.png)
 
-
-## Live Demo
-
-A live hosted version of this application can be found here:
-
-**[https://hr.samples.ravendb.net](https://hr.samples.ravendb.net)**
-
-Please bear in mind, this application, for sake of simplicity of the deployment, is deployed in XYZ region. This can impact the latency you perceive. (remove if not applicable).
-
-We do clean the environment from time to time.
-
 ## Features used
 
 The following RavenDB features are used to build the application:
