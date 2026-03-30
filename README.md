@@ -57,7 +57,8 @@ If you want to run the application locally, please follow the steps:
    # Required
    SAMPLES_HR_OPENAI_API_KEY=<your-openai-api-key>
    
-   # Required - developer or enterprise license
+   # Required, a developer or an enterprise license, with new lines removed, like:
+   # {"Id":"12345678-abcd-abcd-abcd-12345678","Name":"NAME","Keys":["YWxsIHRoZXNl", "IGxpbmVzIHRoY", "XQgYXJlIHNw" ]}
    SAMPLES_HR_RAVEN_LICENSE=<your-ravendb-license> 
 
    # Optional (rate limiting - defaults provided)
