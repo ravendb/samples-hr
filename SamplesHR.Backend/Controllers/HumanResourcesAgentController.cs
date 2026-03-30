@@ -95,9 +95,9 @@ namespace SamplesHR.Backend.Controllers
                     agentId: "hr-assistant", conversationId,
                     new AiConversationCreationOptions
                     {
-                        Parameters = new Dictionary<string, object>
+                        Parameters = new Dictionary<string, AiConversationParameter>
                         {
-                            ["employeeId"] = request.EmployeeId
+                            ["employeeId"] = new() {Value = request.EmployeeId}
                         },
                         ExpirationInSec = 60 * 60 * 24 * 30 // 30 days
                     });
