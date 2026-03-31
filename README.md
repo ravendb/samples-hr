@@ -52,6 +52,7 @@ If you want to run the application locally, please follow the steps:
 1. Install prerequisites:
    1. [.NET 10.x](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
    1. [Node.js 22.x](https://nodejs.org/en/download)
+   1. [Aspire](https://aspire.dev/get-started/install-cli/)
 1. Set required environment variables:
    ```bash
    # Required
