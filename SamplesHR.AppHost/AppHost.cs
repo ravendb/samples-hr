@@ -26,6 +26,7 @@ var ravenDatabase = ravenServer.AddDatabase(dbName);
 
 var frontend = builder.AddNpmApp("frontend", "../sampleshr-frontend")
     .WithHttpEndpoint(env: "PORT")
+    .WithEnvironment("BROWSER", "none")
     .PublishAsDockerFile();
 
 var backend = builder.AddProject<Projects.SamplesHR_Backend>("backend")
