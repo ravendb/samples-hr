@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { hrApi, ChatRequest, ChatResponse, EmployeeDropdown, RateLimitError, RateLimitErrorCode, SampleBill } from '../api';
 import { SignatureDialog } from './SignatureDialog';
@@ -256,7 +256,7 @@ Hello, **${employee.name}**, how can I help you today?`,
     }
   };
 
-  const handleSendMessage = async (explicitMessage?: string) => {
+  const handleSendMessage = useCallback(async (explicitMessage?: string) => {
     const messageToSend = explicitMessage || inputMessage;
     if (!messageToSend.trim() || isLoading || !selectedEmployee) return;
 
@@ -350,7 +350,7 @@ Hello, **${employee.name}**, how can I help you today?`,
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [inputMessage, isLoading, selectedEmployee, pendingBill, conversationId, interactWithModel, onRateLimitError]);
 
   useEffect(() => {
     handleSendMessageRef.current = handleSendMessage;
