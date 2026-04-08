@@ -12,6 +12,7 @@ using Raven.Client.Documents.AI;
 using SamplesHR.Backend.Application.Exception;
 using SamplesHR.Backend.Application.Usage;
 using SamplesHR.Backend.Models;
+using static SamplesHR.Backend.Infrastructure.RavenDB.HumanResourcesAgentCreator;
 using SamplesHR.Backend.Models.RavenDBAiAgent;
 
 namespace SamplesHR.Backend.Controllers
@@ -92,12 +93,12 @@ namespace SamplesHR.Backend.Controllers
                 var documentsToSign = new List<SignatureDocumentRequest>();
                 var conversationId = request.ConversationId ?? "hr/" + request.EmployeeId + "/" + DateTime.Today.ToString("yyyy-MM-dd");
                 var conversation = documentStore.AI.Conversation(
-                    agentId: "hr-assistant", conversationId,
+                    agentId: AgentIdentifier, conversationId,
                     new AiConversationCreationOptions
                     {
                         Parameters = new Dictionary<string, AiConversationParameter>
                         {
-                            ["employeeId"] = new() {Value = request.EmployeeId}
+                            [EmployeeIdParameter] = new() {Value = request.EmployeeId}
                         },
                         ExpirationInSec = 60 * 60 * 24 * 30 // 30 days
                     });
@@ -118,7 +119,7 @@ namespace SamplesHR.Backend.Controllers
                     }
                 }
 
-                conversation.Handle<RaiseIssueArgs, string>("RaiseIssue", async (args) =>
+                conversation.Handle<RaiseIssueArgs, string>(RaiseIssueAction, async (args) =>
                 {
                     using var session = documentStore.OpenAsyncSession();
                     var issue = new HrIssue
@@ -137,7 +138,7 @@ namespace SamplesHR.Backend.Controllers
                     return "Raised issue: " + issue.Id;
                 });
 
-                conversation.Handle<ReportBusinessTripExpenseArgs, string>("ReportBusinessTripExpense", async (args) =>
+                conversation.Handle<ReportBusinessTripExpenseArgs, string>(ReportBusinessTripExpenseAction, async (args) =>
                 {
                     using var session = documentStore.OpenAsyncSession();
                     var bill = new BusinessTripBill
@@ -157,7 +158,7 @@ namespace SamplesHR.Backend.Controllers
                     return "Business trip expense reported: " + bill.Id;
                 });
 
-                conversation.Receive<SignDocumentArgs>("SignDocument", async (req, args) =>
+                conversation.Receive<SignDocumentArgs>(SignDocumentAction, async (req, args) =>
                 {
                     using var session = documentStore.OpenAsyncSession();
                     var document = await session.LoadAsync<SignatureDocument>(

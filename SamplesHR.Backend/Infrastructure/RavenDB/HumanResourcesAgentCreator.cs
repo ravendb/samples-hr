@@ -7,14 +7,24 @@ namespace SamplesHR.Backend.Infrastructure.RavenDB;
 
 public static class HumanResourcesAgentCreator
 {
+    public const string AgentIdentifier = "hr-assistant";
+
+    public const string ConnectionStringName = "Human Resources' AI Model";
+
+    public const string EmployeeIdParameter = "employeeId";
+
+    public const string RaiseIssueAction = "RaiseIssue";
+    public const string SignDocumentAction = "SignDocument";
+    public const string ReportBusinessTripExpenseAction = "ReportBusinessTripExpense";
+
     public static Task Create(IDocumentStore store)
     {
         return store.AI.CreateAgentAsync(
             new AiAgentConfiguration
             {
                 Name = "HR Assistant",
-                Identifier = "hr-assistant",
-                ConnectionStringName = "Human Resources' AI Model",
+                Identifier = AgentIdentifier,
+                ConnectionStringName = ConnectionStringName,
                 SystemPrompt = @"You are an HR assistant. 
 Provide info on benefits, policies, and departments. 
 Be professional and cheery.
@@ -40,7 +50,7 @@ When the user asks about their monthly expenses, use GetMonthlyBusinessTripExpen
 
 Do NOT discuss non-HR or non-expense topics. Answer only for the current employee.
 ",
-                Parameters = [new AiAgentParameter("employeeId", "Employee ID; answer only for this employee")],
+                Parameters = [new AiAgentParameter(EmployeeIdParameter, "Employee ID; answer only for this employee")],
                 SampleObject = JsonConvert.SerializeObject(new Reply
                 {
                     Answer = "Detailed answer to query",
@@ -52,16 +62,16 @@ Do NOT discuss non-HR or non-expense topics. Answer only for the current employe
                     {
                         Name = "GetEmployeeInfo",
                         Description = "Retrieve employee details",
-                        Query = "from Employees where id() = $employeeId",
+                        Query = $"from Employees where id() = ${EmployeeIdParameter}",
                         ParametersSampleObject = "{}"
                     },
                     new AiAgentToolQuery
                     {
                         Name = "GetVacations",
                         Description = "Retrieve recent employee vacation details",
-                        Query = @"
-                    from VacationRequests 
-                    where EmployeeId = $employeeId 
+                        Query = $@"
+                    from VacationRequests
+                    where EmployeeId = ${EmployeeIdParameter}
                     order by SubmittedDate desc
                     limit 5",
                         ParametersSampleObject = "{}"
@@ -70,9 +80,9 @@ Do NOT discuss non-HR or non-expense topics. Answer only for the current employe
                     {
                         Name = "GetPayStubs",
                         Description = "Retrieve employee's paystubs within a given date range",
-                        Query = @"
-                    from PayStubs 
-                    where EmployeeId = $employeeId 
+                        Query = $@"
+                    from PayStubs
+                    where EmployeeId = ${EmployeeIdParameter}
                         and PayDate between $startDate and $endDate
                     order by PayDate desc
                     select PayPeriodStart, PayPeriodEnd, PayDate, GrossPay, NetPay, 
@@ -85,9 +95,9 @@ Do NOT discuss non-HR or non-expense topics. Answer only for the current employe
                     {
                         Name = "FindIssues",
                         Description = "Semantic search for employee's issues",
-                        Query = @"
+                        Query = $@"
                     from HRIssues
-                    where EmployeeId = $employeeId 
+                    where EmployeeId = ${EmployeeIdParameter}
                         and (vector.search(embedding.text(Title), $query) or vector.search(embedding.text(Description), $query))
                     order by SubmittedDate desc
                     limit 5",
@@ -118,9 +128,9 @@ Do NOT discuss non-HR or non-expense topics. Answer only for the current employe
                     {
                         Name = "GetMonthlyBusinessTripExpenses",
                         Description = "Retrieve employee's business trip expenses within a given month (provide first and last day of the month)",
-                        Query = @"
+                        Query = $@"
                     from BusinessTripBills
-                    where EmployeeId = $employeeId
+                    where EmployeeId = ${EmployeeIdParameter}
                         and ExpenseDate between $monthStart and $monthEnd
                     order by ExpenseDate desc",
                         ParametersSampleObject = "{\"monthStart\": \"yyyy-MM-dd\", \"monthEnd\": \"yyyy-MM-dd\"}"
@@ -130,7 +140,7 @@ Do NOT discuss non-HR or non-expense topics. Answer only for the current employe
                 [
                     new AiAgentToolAction
                     {
-                        Name = "RaiseIssue",
+                        Name = RaiseIssueAction,
                         Description = "Raise a new HR issue for the employee (full details)",
                         ParametersSampleObject = JsonConvert.SerializeObject(new RaiseIssueArgs
                         {
@@ -142,7 +152,7 @@ Do NOT discuss non-HR or non-expense topics. Answer only for the current employe
                     },
                     new AiAgentToolAction
                     {
-                        Name = "SignDocument",
+                        Name = SignDocumentAction,
                         Description = "Asks the employee to sign a document",
                         ParametersSampleObject = JsonConvert.SerializeObject(new SignDocumentArgs
                         {
@@ -151,7 +161,7 @@ Do NOT discuss non-HR or non-expense topics. Answer only for the current employe
                     },
                     new AiAgentToolAction
                     {
-                        Name = "ReportBusinessTripExpense",
+                        Name = ReportBusinessTripExpenseAction,
                         Description = "Reports a business trip expense extracted from a bill/receipt image. Only call this AFTER the user explicitly confirms they want to report it.",
                         ParametersSampleObject = JsonConvert.SerializeObject(new ReportBusinessTripExpenseArgs
                         {

@@ -25,7 +25,7 @@ public class RavenInitializer(IDocumentStore store) : IHostedService
 
     private static readonly AiConnectionString AgentOpenAiConnectionString = new()
     {
-        Name = "Human Resources' AI Model",
+        Name = HumanResourcesAgentCreator.ConnectionStringName,
         ModelType = AiModelType.Chat,
         OpenAiSettings = new OpenAiSettings
         {
