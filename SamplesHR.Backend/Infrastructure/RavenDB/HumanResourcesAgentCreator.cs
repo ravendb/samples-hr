@@ -27,6 +27,7 @@ public static class HumanResourcesAgentCreator
                 Name = "Business Trip Expense Manager",
                 Identifier = ExpenseAgentIdentifier,
                 ConnectionStringName = ConnectionStringName,
+                Parameters = [new AiAgentParameter(EmployeeIdParameter, "Employee ID; answer only for this employee")],
                 SystemPrompt = @"You are a business trip expense assistant.
 
 When a bill or receipt image is attached to the conversation, analyze it and extract:
