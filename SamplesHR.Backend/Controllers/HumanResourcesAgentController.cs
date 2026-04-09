@@ -138,7 +138,7 @@ namespace SamplesHR.Backend.Controllers
                     return "Raised issue: " + issue.Id;
                 });
 
-                conversation.Handle<ReportBusinessTripExpenseArgs, string>(ReportBusinessTripExpenseAction, async (args) =>
+                conversation.Handle<ReportBusinessTripExpenseArgs, string>($"{ExpenseAgentIdentifier}/{ReportBusinessTripExpenseAction}", async (args) =>
                 {
                     using var session = documentStore.OpenAsyncSession();
                     var bill = new BusinessTripBill

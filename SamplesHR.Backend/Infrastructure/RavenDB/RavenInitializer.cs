@@ -48,7 +48,8 @@ public class RavenInitializer(IDocumentStore store) : IHostedService
         await store.Maintenance.SendAsync(
             new PutConnectionStringOperation<AiConnectionString>(AgentOpenAiConnectionString), cancellationToken);
         
-        // 3) AI AGENT
+        // 3) AI AGENTS (sub-agent first, parent references it)
+        await HumanResourcesAgentCreator.CreateExpenseAgent(store);
         await HumanResourcesAgentCreator.Create(store);
 
     }
