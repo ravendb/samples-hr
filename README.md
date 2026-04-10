@@ -4,7 +4,11 @@
 
 ## Overview
 
-A sample application providing a human resources assistant chatbot. It leverages [RavenDB](https://ravendb.net) database and [RavenDB AI](https://docs.ravendb.net/ai-integration/ai-integration_start).
+The Human Resources Assistant **tackles the complexity of building AI-powered enterprise apps** by showing how **AI agents, vector search, and data storage can be supported by one database**. Instead of stitching together separate AI frameworks, vector stores, and backend databases, RavenDB's native AI Agents handle tool calling and conversation management right where your data already lives.
+
+The app demonstrates **practical rate limiting powered by time series data**. By recording API usage per session and globally using RavenDB's built-in time series, the system enforces fair access — with real-time usage visualization streamed to every connected client. Combined with document expiration for automatic session cleanup, the architecture stays lean without any external scheduling or cron jobs.
+
+Finally, the app **showcases the depth of RavenDB's document extensions**. Whether we consider attachments to store employee signatures or vector search enables semantic querying of HR policies. All of these features work together in a single, cohesive database — no sidecars, no sync pipelines.
 
 ![](.github/assets/samples_hr.png)
 
