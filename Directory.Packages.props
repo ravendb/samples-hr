@@ -24,7 +24,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
-    <PackageVersion Include="RavenDB.Client" Version="7.2.2-nightly-*" />
+    <PackageVersion Include="RavenDB.Client" Version="7.2.2" />
     <PackageVersion Include="RavenMigrations" Version="6.0.2" />
   </ItemGroup>
 </Project>
