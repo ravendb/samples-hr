@@ -57,19 +57,21 @@ If you want to run the application locally, please follow the steps:
    1. [.NET 10.x](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
    1. [Node.js 22.x](https://nodejs.org/en/download)
    1. [Aspire](https://aspire.dev/get-started/install-cli/)
-1. Set required environment variables:
-   ```bash
-   # Required
-   SAMPLES_HR_OPENAI_API_KEY=<your-openai-api-key>
+1. Set Aspire parameters when prompted:
    
-   # Required, a developer or an enterprise license, with new lines removed, like:
-   # {"Id":"12345678-abcd-abcd-abcd-12345678","Name":"NAME","Keys":["YWxsIHRoZXNl", "IGxpbmVzIHRoY", "XQgYXJlIHNw" ]}
-   SAMPLES_HR_RAVEN_LICENSE=<your-ravendb-license> 
-
-   # Optional (rate limiting - defaults provided)
-   SAMPLES_HR_MAX_GLOBAL_REQUESTS_PER_15_MINUTES=100
-   SAMPLES_HR_MAX_SESSION_REQUESTS_PER_30_SECONDS=5
+   **Required:**
+   - `openai-api-key` - Your OpenAI API key
+   - `ravendb-license` - Your RavenDB license (developer or enterprise, formatted as JSON with newlines removed)
+   
+   Example license format:
+   ```json
+   {"Id":"12345678-abcd-abcd-abcd-12345678","Name":"NAME","Keys":["YWxsIHRoZXNl", "IGxpbmVzIHRoY", "XQgYXJlIHNw" ]}
    ```
+
+   **Optional (with defaults):**
+   - `max-global-requests-per-15-min` (default: 100)
+   - `max-session-requests-per-30-sec` (default: 5)
+
 1. `npm install` in `/sampleshr-frontend` to get all the needed packages
 1. Run the .NET Aspire AppHost:
    ```bash

@@ -2,14 +2,21 @@ using CommunityToolkit.Aspire.Hosting.RavenDB;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var license = Environment.GetEnvironmentVariable("SAMPLES_HR_RAVEN_LICENSE");
+// Parameters
+var ravenDbLicense = builder
+    .AddParameter("ravendb-license", secret: true)
+    .WithDescription("Your Developer license formatted as JSON.");
+
+var openAiApiKey = builder.AddParameter("openai-api-key", secret: true)
+    .WithDescription("OpenAI API key");
+
+var maxGlobalRequests = builder.AddParameter("max-global-requests-per-15-min", "100")
+    .WithDescription("Maximum API requests globally per 15 minutes");
+
+var maxSessionRequests = builder.AddParameter("max-session-requests-per-30-sec", "5")
+    .WithDescription("Maximum API requests per session per 30 seconds");
 
 var settings = RavenDBServerSettings.Unsecured();
-if (license != null)
-{
-    // Use the license from the environmental variable
-    settings.WithLicense(license);
-}
 
 // High enough so that they don't collide with other local things run on 8080 etc
 settings.Port = 9349;
@@ -18,7 +25,9 @@ settings.TcpPort = 41349;
 var ravenServer = builder
     .AddRavenDB("ravendb", settings)
     .WithImage("ravendb/ravendb", "7.2-latest")
-    .WithIconName("Database");
+    .WithIconName("Database")
+    .WithEnvironment("RAVEN_License_Eula_Accepted", "true")
+    .WithEnvironment("RAVEN_License", ravenDbLicense);
 
 const string dbName = "HRAssistant";
 
@@ -33,7 +42,9 @@ var backend = builder.AddProject<Projects.SamplesHR_Backend>("backend")
     .WithReference(ravenDatabase)
     .WithReference(frontend)
     .WaitFor(ravenDatabase)
-    .WithEnvironment("SAMPLES_HR_OPENAI_API_KEY", Environment.GetEnvironmentVariable("SAMPLES_HR_OPENAI_API_KEY"))
+    .WithEnvironment("SAMPLES_HR_OPENAI_API_KEY", openAiApiKey)
+    .WithEnvironment("SAMPLES_HR_MAX_GLOBAL_REQUESTS_PER_15_MINUTES", maxGlobalRequests)
+    .WithEnvironment("SAMPLES_HR_MAX_SESSION_REQUESTS_PER_30_SECONDS", maxSessionRequests)
     .WithHttpCommand(
     path: "/api/seed/all",
     displayName: "Seed data",
