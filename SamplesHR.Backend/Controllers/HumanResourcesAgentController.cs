@@ -11,7 +11,7 @@ using Raven.Client.Documents;
 using Raven.Client.Documents.AI;
 using SamplesHR.Backend.Application.Exception;
 using SamplesHR.Backend.Application.Usage;
-using SamplesHR.Backend.Models;
+using SamplesHR.Model;
 using static SamplesHR.Backend.Infrastructure.RavenDB.HumanResourcesAgentCreator;
 using SamplesHR.Backend.Models.RavenDBAiAgent;
 

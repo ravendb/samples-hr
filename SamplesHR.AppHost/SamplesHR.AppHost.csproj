@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SamplesHR.Backend\SamplesHR.Backend.csproj" />
+    <ProjectReference Include="..\SamplesHR.Seeder\SamplesHR.Seeder.csproj" />
   </ItemGroup>
 
 </Project>

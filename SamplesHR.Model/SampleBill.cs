@@ -1,4 +1,4 @@
-namespace SamplesHR.Backend.Models;
+namespace SamplesHR.Model;
 
 public class SampleBill
 {

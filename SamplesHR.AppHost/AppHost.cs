@@ -33,6 +33,11 @@ const string dbName = "HRAssistant";
 
 var ravenDatabase = ravenServer.AddDatabase(dbName);
 
+var seeder = builder.AddProject<Projects.SamplesHR_Seeder>("seeder")
+    .WithReference(ravenDatabase)
+    .WaitFor(ravenDatabase)
+    .WithIconName("DatabaseArrowUp");
+
 var frontend = builder.AddNpmApp("frontend", "../sampleshr-frontend")
     .WithHttpEndpoint(env: "PORT")
     .WithEnvironment("BROWSER", "none")
@@ -42,19 +47,10 @@ var backend = builder.AddProject<Projects.SamplesHR_Backend>("backend")
     .WithReference(ravenDatabase)
     .WithReference(frontend)
     .WaitFor(ravenDatabase)
+    .WaitForCompletion(seeder)
     .WithEnvironment("SAMPLES_HR_OPENAI_API_KEY", openAiApiKey)
     .WithEnvironment("SAMPLES_HR_MAX_GLOBAL_REQUESTS_PER_15_MINUTES", maxGlobalRequests)
-    .WithEnvironment("SAMPLES_HR_MAX_SESSION_REQUESTS_PER_30_SECONDS", maxSessionRequests)
-    .WithHttpCommand(
-    path: "/api/seed/all",
-    displayName: "Seed data",
-    endpointName: "http",
-    commandOptions: new HttpCommandOptions
-    {
-        Description = "Seed the database with sample data",
-        IconName = "databaseArrowUp",
-        IsHighlighted = true
-    });
+    .WithEnvironment("SAMPLES_HR_MAX_SESSION_REQUESTS_PER_30_SECONDS", maxSessionRequests);
 
 frontend
     .WithReference(backend)
