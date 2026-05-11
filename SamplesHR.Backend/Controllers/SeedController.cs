@@ -74,6 +74,7 @@ namespace SamplesHR.Backend.Controllers
 
         private async Task SeedEmployees(Raven.Client.Documents.Session.IAsyncDocumentSession session)
         {
+            var today = DateTime.UtcNow.Date;
             var employees = new List<Employee>
             {
                 new()
@@ -83,7 +84,7 @@ namespace SamplesHR.Backend.Controllers
                     Department = "Information Technology",
                     DepartmentId = "departments/it",
                     EmploymentType = "full-time",
-                    HireDate = new DateTime(2022, 3, 15),
+                    HireDate = today.AddYears(-4).AddMonths(-2),
                     CriticalRole = true,
                     JobTitle = "IT Manager",
                     Email = "alice.johnson@company.com",
@@ -94,7 +95,7 @@ namespace SamplesHR.Backend.Controllers
                         AccruedDays = 18.5m,
                         CarryOverDays = 3,
                         Balance = 21.5m,
-                        History = new() { new() { Year = 2025, UsedDays = 7, CarryOverUsed = 0, Requests = new() } }
+                        History = new() { new() { Year = today.Year, UsedDays = 7, CarryOverUsed = 0, Requests = new() } }
                     }
                 },
                 new()
@@ -104,7 +105,7 @@ namespace SamplesHR.Backend.Controllers
                     Department = "Human Resources",
                     DepartmentId = "departments/hr",
                     EmploymentType = "full-time",
-                    HireDate = new DateTime(2021, 8, 1),
+                    HireDate = today.AddYears(-5),
                     CriticalRole = true,
                     JobTitle = "HR Manager",
                     Email = "bob.smith@company.com",
@@ -115,7 +116,7 @@ namespace SamplesHR.Backend.Controllers
                         AccruedDays = 20m,
                         CarryOverDays = 5,
                         Balance = 25m,
-                        History = new() { new() { Year = 2025, UsedDays = 5, CarryOverUsed = 2, Requests = new() } }
+                        History = new() { new() { Year = today.Year, UsedDays = 5, CarryOverUsed = 2, Requests = new() } }
                     }
                 },
                 new()
@@ -125,7 +126,7 @@ namespace SamplesHR.Backend.Controllers
                     Department = "Finance",
                     DepartmentId = "departments/finance",
                     EmploymentType = "full-time",
-                    HireDate = new DateTime(2023, 1, 10),
+                    HireDate = today.AddYears(-3).AddMonths(-4),
                     CriticalRole = false,
                     JobTitle = "Finance Manager",
                     Email = "carol.wilson@company.com",
@@ -136,7 +137,7 @@ namespace SamplesHR.Backend.Controllers
                         AccruedDays = 15m,
                         CarryOverDays = 0,
                         Balance = 15m,
-                        History = new() { new() { Year = 2025, UsedDays = 8, CarryOverUsed = 0, Requests = new() } }
+                        History = new() { new() { Year = today.Year, UsedDays = 8, CarryOverUsed = 0, Requests = new() } }
                     }
                 },
                 new()
@@ -146,7 +147,7 @@ namespace SamplesHR.Backend.Controllers
                     Department = "Marketing",
                     DepartmentId = "departments/marketing",
                     EmploymentType = "full-time",
-                    HireDate = new DateTime(2024, 6, 1),
+                    HireDate = today.AddYears(-2),
                     CriticalRole = false,
                     JobTitle = "Marketing Manager",
                     Email = "david.brown@company.com",
@@ -157,7 +158,7 @@ namespace SamplesHR.Backend.Controllers
                         AccruedDays = 12m,
                         CarryOverDays = 0,
                         Balance = 12m,
-                        History = new() { new() { Year = 2025, UsedDays = 3, CarryOverUsed = 0, Requests = new() } }
+                        History = new() { new() { Year = today.Year, UsedDays = 3, CarryOverUsed = 0, Requests = new() } }
                     }
                 },
                 new()
@@ -167,7 +168,7 @@ namespace SamplesHR.Backend.Controllers
                     Department = "Engineering",
                     DepartmentId = "departments/engineering",
                     EmploymentType = "full-time",
-                    HireDate = new DateTime(2024, 5, 1),
+                    HireDate = today.AddYears(-2).AddMonths(-1),
                     CriticalRole = true,
                     JobTitle = "Senior Developer",
                     Email = "john.Dev@company.com",
@@ -178,7 +179,7 @@ namespace SamplesHR.Backend.Controllers
                         AccruedDays = 15m,
                         CarryOverDays = 5,
                         Balance = 15m,
-                        History = new() { new() { Year = 2025, UsedDays = 5, CarryOverUsed = 0, Requests = new() } }
+                        History = new() { new() { Year = today.Year, UsedDays = 5, CarryOverUsed = 0, Requests = new() } }
                     }
                 },
                 new()
@@ -188,7 +189,7 @@ namespace SamplesHR.Backend.Controllers
                     Department = "Engineering",
                     DepartmentId = "departments/engineering",
                     EmploymentType = "full-time",
-                    HireDate = new DateTime(2023, 9, 15),
+                    HireDate = today.AddYears(-2).AddMonths(-8),
                     CriticalRole = false,
                     JobTitle = "Software Engineer",
                     Email = "sarah.martinez@company.com",
@@ -199,7 +200,7 @@ namespace SamplesHR.Backend.Controllers
                         AccruedDays = 16m,
                         CarryOverDays = 2,
                         Balance = 18m,
-                        History = new() { new() { Year = 2025, UsedDays = 4, CarryOverUsed = 0, Requests = new() } }
+                        History = new() { new() { Year = today.Year, UsedDays = 4, CarryOverUsed = 0, Requests = new() } }
                     }
                 },
                 new()
@@ -209,7 +210,7 @@ namespace SamplesHR.Backend.Controllers
                     Department = "Information Technology",
                     DepartmentId = "departments/it",
                     EmploymentType = "full-time",
-                    HireDate = new DateTime(2023, 11, 20),
+                    HireDate = today.AddYears(-2).AddMonths(-6),
                     CriticalRole = false,
                     JobTitle = "IT Support Specialist",
                     Email = "mike.thompson@company.com",
@@ -220,7 +221,7 @@ namespace SamplesHR.Backend.Controllers
                         AccruedDays = 12m,
                         CarryOverDays = 0,
                         Balance = 12m,
-                        History = new() { new() { Year = 2025, UsedDays = 6, CarryOverUsed = 0, Requests = new() } }
+                        History = new() { new() { Year = today.Year, UsedDays = 6, CarryOverUsed = 0, Requests = new() } }
                     }
                 }
             };
@@ -487,20 +488,28 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
 
         private async Task SeedVacationRequests(Raven.Client.Documents.Session.IAsyncDocumentSession session)
         {
+            var today = DateTime.UtcNow.Date;
+
+            var aliceStart = today.AddMonths(-2).AddDays(4);
+            var johnStart = today.AddMonths(1).AddDays(11);
+            var sarahStart = today.AddDays(-21);
+            var bobStart = today.AddMonths(2);
+            var carolStart = today.AddDays(-42);
+
             var vacationRequests = new List<VacationRequest>
             {
                 new()
                 {
-                    Id = "vacations/alice-2025-001",
+                    Id = $"vacations/alice-{aliceStart.Year}-001",
                     EmployeeId = "employees/alice",
                     EmployeeName = "Alice Johnson",
-                    StartDate = new DateTime(2025, 3, 15),
-                    EndDate = new DateTime(2025, 3, 19),
+                    StartDate = aliceStart,
+                    EndDate = aliceStart.AddDays(4),
                     DaysRequested = 5,
                     Reason = "Family vacation to Hawaii",
                     Status = "Approved",
-                    SubmittedDate = new DateTime(2025, 2, 1),
-                    ApprovedDate = new DateTime(2025, 2, 3),
+                    SubmittedDate = today.AddMonths(-3),
+                    ApprovedDate = today.AddMonths(-3).AddDays(2),
                     ApprovedBy = "employees/bob",
                     ReplacementEmployee = new Replacement
                     {
@@ -511,15 +520,15 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
                 },
                 new()
                 {
-                    Id = "vacations/john-2025-001",
+                    Id = $"vacations/john-{johnStart.Year}-001",
                     EmployeeId = "employees/john",
                     EmployeeName = "John Dev",
-                    StartDate = new DateTime(2025, 4, 22),
-                    EndDate = new DateTime(2025, 4, 26),
+                    StartDate = johnStart,
+                    EndDate = johnStart.AddDays(4),
                     DaysRequested = 5,
                     Reason = "Spring break with family",
                     Status = "Pending",
-                    SubmittedDate = new DateTime(2025, 3, 10),
+                    SubmittedDate = today.AddDays(-21),
                     ApprovedDate = null,
                     ApprovedBy = "employees/alice",
                     ReplacementEmployee = new Replacement
@@ -531,44 +540,44 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
                 },
                 new()
                 {
-                    Id = "vacations/sarah-2025-001",
+                    Id = $"vacations/sarah-{sarahStart.Year}-001",
                     EmployeeId = "employees/sarah",
                     EmployeeName = "Sarah Martinez",
-                    StartDate = new DateTime(2025, 5, 1),
-                    EndDate = new DateTime(2025, 5, 1),
+                    StartDate = sarahStart,
+                    EndDate = sarahStart,
                     DaysRequested = 1,
                     Reason = "Personal appointment",
                     Status = "Approved",
-                    SubmittedDate = new DateTime(2025, 4, 15),
-                    ApprovedDate = new DateTime(2025, 4, 16),
+                    SubmittedDate = today.AddMonths(-1),
+                    ApprovedDate = today.AddMonths(-1).AddDays(1),
                     ApprovedBy = "employees/alice",
                     VacationType = "Personal Day"
                 },
                 new()
                 {
-                    Id = "vacations/bob-2025-001",
+                    Id = $"vacations/bob-{bobStart.Year}-001",
                     EmployeeId = "employees/bob",
                     EmployeeName = "Bob Smith",
-                    StartDate = new DateTime(2025, 6, 10),
-                    EndDate = new DateTime(2025, 6, 21),
+                    StartDate = bobStart,
+                    EndDate = bobStart.AddDays(9),
                     DaysRequested = 10,
                     Reason = "European vacation",
                     Status = "Pending",
-                    SubmittedDate = new DateTime(2025, 4, 1),
+                    SubmittedDate = today.AddDays(-21),
                     VacationType = "Annual Leave"
                 },
                 new()
                 {
-                    Id = "vacations/carol-2025-001",
+                    Id = $"vacations/carol-{carolStart.Year}-001",
                     EmployeeId = "employees/carol",
                     EmployeeName = "Carol Wilson",
-                    StartDate = new DateTime(2025, 7, 4),
-                    EndDate = new DateTime(2025, 7, 4),
+                    StartDate = carolStart,
+                    EndDate = carolStart,
                     DaysRequested = 1,
                     Reason = "Independence Day extended weekend",
                     Status = "Approved",
-                    SubmittedDate = new DateTime(2025, 5, 1),
-                    ApprovedDate = new DateTime(2025, 5, 2),
+                    SubmittedDate = today.AddMonths(-2),
+                    ApprovedDate = today.AddMonths(-2).AddDays(1),
                     ApprovedBy = "employees/bob",
                     VacationType = "Personal Day"
                 }
@@ -642,16 +651,37 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
                 }
             };
 
+            var today = DateTime.UtcNow.Date;
+            // First day of the previous calendar month — the most recent complete pay period.
+            var previousMonthStart = new DateTime(today.Year, today.Month, 1).AddMonths(-1);
+
             var payStubs = new List<PayStub>();
 
             foreach (var emp in employees)
             {
                 var ytdGross = 0m;
                 var ytdNet = 0m;
+                var currentYear = 0;
+                var monthsThisYear = 0;
 
-                // Generate 6 months of pay stubs
-                for (int month = 1; month <= 6; month++)
+                // 6 monthly stubs: oldest first (5 months before previous month), newest last (previous month).
+                for (int i = 5; i >= 0; i--)
                 {
+                    var periodStart = previousMonthStart.AddMonths(-i);
+
+                    // Reset YTD accumulators when crossing a calendar year boundary.
+                    if (periodStart.Year != currentYear)
+                    {
+                        ytdGross = 0m;
+                        ytdNet = 0m;
+                        currentYear = periodStart.Year;
+                        monthsThisYear = 0;
+                    }
+
+                    monthsThisYear++;
+
+                    var periodEnd = new DateTime(periodStart.Year, periodStart.Month, DateTime.DaysInMonth(periodStart.Year, periodStart.Month));
+
                     var grossPay = emp.MonthlySalary;
                     var federalTax = grossPay * 0.22m;
                     var stateTax = grossPay * 0.05m;
@@ -668,17 +698,17 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
 
                     var payStub = new PayStub
                     {
-                        Id = $"paystubs/{emp.Id}-2025-{month:D2}",
+                        Id = $"paystubs/{emp.Id}-{periodStart.Year}-{periodStart.Month:D2}",
                         EmployeeId = $"employees/{emp.Id}",
                         EmployeeName = emp.Name,
-                        PayPeriodStart = new DateTime(2025, month, 1),
-                        PayPeriodEnd = new DateTime(2025, month, DateTime.DaysInMonth(2025, month)),
-                        PayDate = new DateTime(2025, month, DateTime.DaysInMonth(2025, month)),
+                        PayPeriodStart = periodStart,
+                        PayPeriodEnd = periodEnd,
+                        PayDate = periodEnd,
                         GrossPay = grossPay,
                         NetPay = netPay,
                         YearToDateGross = ytdGross,
                         YearToDateNet = ytdNet,
-                        PayPeriodNumber = month,
+                        PayPeriodNumber = periodStart.Month,
                         PayFrequency = "Monthly",
                         DirectDeposit = new ACHBankDetails
                         {
@@ -695,15 +725,15 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
                         },
                         Deductions = new List<PayStubDeduction>
                         {
-                            new() { Type = "Health Insurance", Amount = healthInsurance, YearToDate = healthInsurance * month, PreTax = true },
-                            new() { Type = "401(k) Contribution", Amount = retirement401k, YearToDate = retirement401k * month, PreTax = true }
+                            new() { Type = "Health Insurance", Amount = healthInsurance, YearToDate = healthInsurance * monthsThisYear, PreTax = true },
+                            new() { Type = "401(k) Contribution", Amount = retirement401k, YearToDate = retirement401k * monthsThisYear, PreTax = true }
                         },
                         Taxes = new List<PayStubTax>
                         {
-                            new() { Type = "Federal Income Tax", Amount = federalTax, YearToDate = federalTax * month, TaxableWages = grossPay },
-                            new() { Type = "State Income Tax", Amount = stateTax, YearToDate = stateTax * month, TaxableWages = grossPay },
-                            new() { Type = "Social Security", Amount = socialSecurity, YearToDate = socialSecurity * month, TaxableWages = grossPay },
-                            new() { Type = "Medicare", Amount = medicare, YearToDate = medicare * month, TaxableWages = grossPay }
+                            new() { Type = "Federal Income Tax", Amount = federalTax, YearToDate = federalTax * monthsThisYear, TaxableWages = grossPay },
+                            new() { Type = "State Income Tax", Amount = stateTax, YearToDate = stateTax * monthsThisYear, TaxableWages = grossPay },
+                            new() { Type = "Social Security", Amount = socialSecurity, YearToDate = socialSecurity * monthsThisYear, TaxableWages = grossPay },
+                            new() { Type = "Medicare", Amount = medicare, YearToDate = medicare * monthsThisYear, TaxableWages = grossPay }
                         }
                     };
 
@@ -719,6 +749,7 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
 
         private async Task SeedHRIssues(Raven.Client.Documents.Session.IAsyncDocumentSession session)
         {
+            var today = DateTime.UtcNow.Date;
             var issues = new List<HrIssue>
             {
                 new()
@@ -727,20 +758,20 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
                     EmployeeId = "employees/sarah",
                     EmployeeName = "Sarah Martinez",
                     Title = "Health Insurance Coverage Question",
-                    Description = "I need clarification on whether my spouse can be added to my health insurance plan mid-year due to their job loss. They lost coverage on March 1st and I want to make sure I follow the correct enrollment process.",
+                    Description = "I need clarification on whether my spouse can be added to my health insurance plan mid-year due to their job loss. They lost coverage recently and I want to make sure I follow the correct enrollment process.",
                     Category = "Benefits",
                     Priority = "Medium",
                     Status = "Resolved",
-                    SubmittedDate = new DateTime(2025, 3, 5),
-                    AssignedDate = new DateTime(2025, 3, 5),
-                    ResolvedDate = new DateTime(2025, 3, 8),
+                    SubmittedDate = today.AddDays(-70),
+                    AssignedDate = today.AddDays(-70),
+                    ResolvedDate = today.AddDays(-50),
                     AssignedTo = "employees/bob",
                     Resolution = "Loss of spouse's coverage qualifies as a life event allowing mid-year enrollment. Provided enrollment forms and deadline information.",
                     Tags = new() { "benefits", "health insurance", "life event" },
                     Comments = new List<HrIssueComment>
                     {
-                        new() { Id = "comment-001", AuthorId = "employees/bob", AuthorName = "Bob Smith", Content = "This qualifies as a qualifying life event. I'll send you the enrollment forms.", CreatedDate = new DateTime(2025, 3, 6) },
-                        new() { Id = "comment-002", AuthorId = "employees/sarah", AuthorName = "Sarah Martinez", Content = "Thank you! Forms submitted.", CreatedDate = new DateTime(2025, 3, 8) }
+                        new() { Id = "comment-001", AuthorId = "employees/bob", AuthorName = "Bob Smith", Content = "This qualifies as a qualifying life event. I'll send you the enrollment forms.", CreatedDate = today.AddDays(-69) },
+                        new() { Id = "comment-002", AuthorId = "employees/sarah", AuthorName = "Sarah Martinez", Content = "Thank you! Forms submitted.", CreatedDate = today.AddDays(-50) }
                     }
                 },
                 new()
@@ -753,16 +784,16 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
                     Category = "IT Request",
                     Priority = "Low",
                     Status = "Approved",
-                    SubmittedDate = new DateTime(2025, 2, 15),
-                    AssignedDate = new DateTime(2025, 2, 16),
-                    ResolvedDate = new DateTime(2025, 2, 22),
+                    SubmittedDate = today.AddDays(-50),
+                    AssignedDate = today.AddDays(-49),
+                    ResolvedDate = today.AddDays(-43),
                     AssignedTo = "employees/alice",
                     Resolution = "Approved 27-inch monitor and ergonomic keyboard. Equipment ordered and delivered.",
                     Tags = new() { "equipment", "monitor", "ergonomics" },
                     Comments = new List<HrIssueComment>
                     {
-                        new() { Id = "comment-003", AuthorId = "employees/alice", AuthorName = "Alice Johnson", Content = "Request approved. Will order Dell 27-inch monitor and Microsoft ergonomic keyboard.", CreatedDate = new DateTime(2025, 2, 17) },
-                        new() { Id = "comment-004", AuthorId = "employees/mike", AuthorName = "Mike Thompson", Content = "Equipment received and set up. Much better productivity!", CreatedDate = new DateTime(2025, 2, 23) }
+                        new() { Id = "comment-003", AuthorId = "employees/alice", AuthorName = "Alice Johnson", Content = "Request approved. Will order Dell 27-inch monitor and Microsoft ergonomic keyboard.", CreatedDate = today.AddDays(-48) },
+                        new() { Id = "comment-004", AuthorId = "employees/mike", AuthorName = "Mike Thompson", Content = "Equipment received and set up. Much better productivity!", CreatedDate = today.AddDays(-42) }
                     }
                 },
                 new()
@@ -771,18 +802,18 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
                     EmployeeId = "employees/john",
                     EmployeeName = "John Dev",
                     Title = "Payroll Discrepancy - Missing Overtime Hours",
-                    Description = "I noticed that my last paycheck did not include 4 hours of overtime that I worked on February 28th. I stayed late to complete the deployment and logged the time in the system, but it Devsn't appear on my pay stub.",
+                    Description = "I noticed that my last paycheck did not include 4 hours of overtime. I stayed late to complete the deployment and logged the time in the system, but it doesn't appear on my pay stub.",
                     Category = "Payroll",
                     Priority = "High",
                     Status = "In Progress",
-                    SubmittedDate = new DateTime(2025, 3, 10),
-                    AssignedDate = new DateTime(2025, 3, 10),
+                    SubmittedDate = today.AddDays(-30),
+                    AssignedDate = today.AddDays(-30),
                     AssignedTo = "employees/carol",
                     Tags = new() { "payroll", "overtime", "discrepancy" },
                     Comments = new List<HrIssueComment>
                     {
-                        new() { Id = "comment-005", AuthorId = "employees/carol", AuthorName = "Carol Wilson", Content = "I'm reviewing the time records and will check with payroll processing. Will update you by end of week.", CreatedDate = new DateTime(2025, 3, 11), IsInternal = false },
-                        new() { Id = "comment-006", AuthorId = "employees/carol", AuthorName = "Carol Wilson", Content = "Found the issue - overtime approval was not processed in time for payroll cutoff. Will include in next pay period.", CreatedDate = new DateTime(2025, 3, 12), IsInternal = true }
+                        new() { Id = "comment-005", AuthorId = "employees/carol", AuthorName = "Carol Wilson", Content = "I'm reviewing the time records and will check with payroll processing. Will update you by end of week.", CreatedDate = today.AddDays(-29), IsInternal = false },
+                        new() { Id = "comment-006", AuthorId = "employees/carol", AuthorName = "Carol Wilson", Content = "Found the issue - overtime approval was not processed in time for payroll cutoff. Will include in next pay period.", CreatedDate = today.AddDays(-28), IsInternal = true }
                     }
                 },
                 new()
@@ -795,13 +826,13 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
                     Category = "Policy Question",
                     Priority = "Medium",
                     Status = "Open",
-                    SubmittedDate = new DateTime(2025, 3, 18),
-                    AssignedDate = new DateTime(2025, 3, 19),
+                    SubmittedDate = today.AddDays(-10),
+                    AssignedDate = today.AddDays(-9),
                     AssignedTo = "employees/bob",
                     Tags = new() { "remote work", "policy", "flexible work" },
                     Comments = new List<HrIssueComment>
                     {
-                        new() { Id = "comment-007", AuthorId = "employees/bob", AuthorName = "Bob Smith", Content = "I'll review your role requirements and discuss with your manager to evaluate remote work suitability.", CreatedDate = new DateTime(2025, 3, 19) }
+                        new() { Id = "comment-007", AuthorId = "employees/bob", AuthorName = "Bob Smith", Content = "I'll review your role requirements and discuss with your manager to evaluate remote work suitability.", CreatedDate = today.AddDays(-9) }
                     }
                 },
                 new()
@@ -810,11 +841,11 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
                     EmployeeId = "employees/alice",
                     EmployeeName = "Alice Johnson",
                     Title = "Professional Development Conference Request",
-                    Description = "I would like to attend the Cloud Security Summit in Seattle from May 15-17. This conference directly relates to our upcoming security initiatives and would provide valuable knowledge for our team. Registration is $1,200 plus travel expenses.",
+                    Description = "I would like to attend the Cloud Security Summit. This conference directly relates to our upcoming security initiatives and would provide valuable knowledge for our team. Registration is $1,200 plus travel expenses.",
                     Category = "Training Request",
                     Priority = "Medium",
                     Status = "Pending",
-                    SubmittedDate = new DateTime(2025, 3, 25),
+                    SubmittedDate = today.AddDays(-5),
                     Tags = new() { "training", "conference", "professional development" },
                     Comments = new List<HrIssueComment>()
                 },
@@ -828,7 +859,7 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
                     Category = "Facilities",
                     Priority = "Low",
                     Status = "Open",
-                    SubmittedDate = new DateTime(2025, 3, 20),
+                    SubmittedDate = today.AddDays(-14),
                     Tags = new() { "facilities", "temperature", "comfort" },
                     Comments = new List<HrIssueComment>()
                 }
@@ -842,6 +873,7 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
 
         private async Task SeedSignatureDocuments(Raven.Client.Documents.Session.IAsyncDocumentSession session)
         {
+            var today = DateTime.UtcNow.Date;
             var documents = new List<SignatureDocument>
             {
                 new()
@@ -850,9 +882,9 @@ Any suspected or confirmed data breach must be reported immediately to the Data 
                     Title = "Non-Disclosure Agreement (Standard)",
                     Type = "NDA",
                     Version = 2,
-                    CreatedDate = new DateTime(2024, 1, 15),
+                    CreatedDate = today.AddYears(-1).AddMonths(-4),
                     CreatedBy = "Legal Department",
-                    LastUpdated = new DateTime(2024, 6, 10),
+                    LastUpdated = today.AddYears(-1),
                     UpdatedBy = "Legal Department",
                     Description = "Standard non-disclosure agreement for all employees handling confidential information",
                     Tags = new() { "confidentiality", "legal", "mandatory" },
@@ -883,9 +915,9 @@ This agreement remains in effect during employment and for 2 years after termina
                     Title = "Employee Code of Conduct",
                     Type = "Policy",
                     Version = 3,
-                    CreatedDate = new DateTime(2024, 2, 1),
+                    CreatedDate = today.AddYears(-1).AddMonths(-3),
                     CreatedBy = "Human Resources",
-                    LastUpdated = new DateTime(2024, 8, 1),
+                    LastUpdated = today.AddMonths(-9),
                     UpdatedBy = "Human Resources",
                     Description = "Comprehensive code of conduct covering workplace behavior and ethical standards",
                     Tags = new() { "ethics", "conduct", "workplace", "mandatory" },
@@ -915,7 +947,7 @@ Employees must complete annual ethics training and report any policy violations 
                     Title = "Remote Work Policy Acknowledgment",
                     Type = "Agreement",
                     Version = 1,
-                    CreatedDate = new DateTime(2024, 3, 1),
+                    CreatedDate = today.AddYears(-1).AddMonths(-2),
                     CreatedBy = "Human Resources",
                     Description = "Acknowledgment of remote work policies and responsibilities",
                     Tags = new() { "remote work", "policy", "flexible work" },
@@ -944,7 +976,7 @@ I agree to follow all company policies while working remotely and understand tha
                     Title = "Workplace Safety Training Completion",
                     Type = "Certification",
                     Version = 1,
-                    CreatedDate = new DateTime(2024, 1, 10),
+                    CreatedDate = today.AddYears(-1).AddMonths(-4),
                     CreatedBy = "Safety Department",
                     Description = "Certification of completion of mandatory workplace safety training",
                     Tags = new() { "safety", "training", "certification", "mandatory" },
@@ -976,9 +1008,9 @@ I understand this certification expires annually and requires refresher training
                     Title = "Data Privacy and Protection Policy",
                     Type = "Policy",
                     Version = 2,
-                    CreatedDate = new DateTime(2024, 4, 1),
+                    CreatedDate = today.AddYears(-1).AddMonths(-1),
                     CreatedBy = "IT Security",
-                    LastUpdated = new DateTime(2024, 7, 15),
+                    LastUpdated = today.AddMonths(-10),
                     UpdatedBy = "IT Security",
                     Description = "Acknowledgment of data privacy responsibilities and GDPR compliance",
                     Tags = new() { "privacy", "data protection", "GDPR", "security" },
@@ -1012,7 +1044,7 @@ I commit to:
                     Title = "Company Equipment Responsibility Agreement",
                     Type = "Agreement",
                     Version = 1,
-                    CreatedDate = new DateTime(2024, 2, 15),
+                    CreatedDate = today.AddYears(-1).AddMonths(-3),
                     CreatedBy = "IT Department",
                     Description = "Agreement outlining responsibilities for company-provided equipment",
                     Tags = new() { "equipment", "responsibility", "IT", "assets" },
@@ -1043,7 +1075,7 @@ I understand that I may be liable for damage due to negligence or misuse and tha
                     Title = "Social Media and Communications Policy",
                     Type = "Policy",
                     Version = 1,
-                    CreatedDate = new DateTime(2024, 5, 1),
+                    CreatedDate = today.AddMonths(-12),
                     CreatedBy = "Marketing Department",
                     Description = "Guidelines for social media use and external communications representing the company",
                     Tags = new() { "social media", "communications", "brand", "policy" },
