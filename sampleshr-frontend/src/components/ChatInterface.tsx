@@ -243,25 +243,25 @@ Hello, **${employee.name}**, how can I help you today?`,
     }
   };
 
-  const interactWithModel = async (requestBody: ChatRequest, botMessageId: string): Promise<ChatResponse> => {
-    while (true) {
-      const response = await sendToModel(requestBody, botMessageId);
-      if (!response.documentsToSign || !response.documentsToSign.length || !selectedEmployee)
-        return response;
-      requestBody = {
-        ...requestBody,
-        message: '',
-        signatures: await handleSignatures(response, selectedEmployee.id)
-      };
-    }
-  };
-
   const handleSendMessage = useCallback(async (explicitMessage?: string) => {
     const messageToSend = explicitMessage || inputMessage;
     if (!messageToSend.trim() || isLoading || !selectedEmployee) return;
 
     const billToSend = pendingBill;
     setPendingBill(null);
+
+    const interactWithModel = async (requestBody: ChatRequest, botMessageId: string): Promise<ChatResponse> => {
+      while (true) {
+        const response = await sendToModel(requestBody, botMessageId);
+        if (!response.documentsToSign || !response.documentsToSign.length || !selectedEmployee)
+          return response;
+        requestBody = {
+          ...requestBody,
+          message: '',
+          signatures: await handleSignatures(response, selectedEmployee.id)
+        };
+      }
+    };
 
     // Normal message handling
     const userMessage: Message = {
@@ -350,7 +350,7 @@ Hello, **${employee.name}**, how can I help you today?`,
     } finally {
       setIsLoading(false);
     }
-  }, [inputMessage, isLoading, selectedEmployee, pendingBill, conversationId, interactWithModel, onRateLimitError]);
+  }, [inputMessage, isLoading, selectedEmployee, pendingBill, conversationId, sendToModel, handleSignatures, onRateLimitError]);
 
   useEffect(() => {
     handleSendMessageRef.current = handleSendMessage;

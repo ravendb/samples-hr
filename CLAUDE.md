@@ -33,6 +33,15 @@ npm start      # dev server
 npm test       # run tests
 ```
 
+### Verifying changes
+
+Always build **both** parts after any change — a backend-only or frontend-only build is not sufficient to catch all errors:
+
+```bash
+dotnet build
+cd sampleshr-frontend && npm ci && npm run build
+```
+
 ### CI
 
 CI runs `dotnet restore --force-evaluate && dotnet build --no-restore` for backend and `npm ci && npm run build` in `sampleshr-frontend/` for frontend. See `.github/workflows/build.yml`.
