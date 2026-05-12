@@ -149,19 +149,6 @@ Hello, **${employee.name}**, how can I help you today?`,
     }
   };
 
-  // Function to request signature - can be called from handleSendMessage
-  // Usage: const result = await requestSignature("Title", "Description");
-  // Returns: { signature: string | null, confirmed: boolean }
-  const requestSignature = async (title: string, description: string): Promise<{ signature: string | null; confirmed: boolean }> => {
-    return new Promise((resolve) => {
-      setSignatureDialog({
-        isOpen: true,
-        title,
-        description,
-        resolve
-      });
-    });
-  };
 
   const handleSignatureConfirm = (signature: string) => {
     setSignatureDialog(prev => {
@@ -186,43 +173,6 @@ Hello, **${employee.name}**, how can I help you today?`,
     setIsBillDialogOpen(false);
   };
 
-  const sendToModel = async (requestBody: ChatRequest, botMessageId: string) => {
-    let botText = '';
-    return await hrApi.chat(
-      requestBody,
-      (chunk: string) => {
-        botText += JSON.parse(chunk);
-        setMessages(prev => prev.map(m =>
-          m.id === botMessageId ? { ...m, text: botText } : m
-        ));
-      }
-    );
-  };
-
-  const handleSignatures = async (response: ChatResponse, selectedEmployeeId: string): Promise<{ toolId: string; content: string }[]> => {
-    var signatures = [];
-    for (const signature of response.documentsToSign) {
-      const signatureResult = await requestSignature(
-        signature.title,
-        signature.content
-      );
-      if (signatureResult.confirmed) {
-        await hrApi.signDocument({
-          conversationId: response.conversationId,
-          employeeId: selectedEmployeeId,
-          toolId: signature.toolId,
-          documentId: signature.documentId,
-          confirmed: signatureResult.confirmed,
-          signatureBlob: signatureResult.signature || undefined
-        });
-        signatures.push({ toolId: signature.toolId, content: 'Signed by employee' });
-      }
-      else {
-        signatures.push({ toolId: signature.toolId, content: 'Employee declined to sign' });
-      }
-    }
-    return signatures;
-  }
 
   const speak = (text: string) => {
     if ('speechSynthesis' in window) {
@@ -249,6 +199,55 @@ Hello, **${employee.name}**, how can I help you today?`,
 
     const billToSend = pendingBill;
     setPendingBill(null);
+
+    const requestSignature = async (title: string, description: string): Promise<{ signature: string | null; confirmed: boolean }> => {
+      return new Promise((resolve) => {
+        setSignatureDialog({
+          isOpen: true,
+          title,
+          description,
+          resolve
+        });
+      });
+    };
+
+    const sendToModel = async (requestBody: ChatRequest, botMessageId: string) => {
+      let botText = '';
+      return await hrApi.chat(
+        requestBody,
+        (chunk: string) => {
+          botText += JSON.parse(chunk);
+          setMessages(prev => prev.map(m =>
+            m.id === botMessageId ? { ...m, text: botText } : m
+          ));
+        }
+      );
+    };
+
+    const handleSignatures = async (response: ChatResponse, selectedEmployeeId: string): Promise<{ toolId: string; content: string }[]> => {
+      var signatures = [];
+      for (const signature of response.documentsToSign) {
+        const signatureResult = await requestSignature(
+          signature.title,
+          signature.content
+        );
+        if (signatureResult.confirmed) {
+          await hrApi.signDocument({
+            conversationId: response.conversationId,
+            employeeId: selectedEmployeeId,
+            toolId: signature.toolId,
+            documentId: signature.documentId,
+            confirmed: signatureResult.confirmed,
+            signatureBlob: signatureResult.signature || undefined
+          });
+          signatures.push({ toolId: signature.toolId, content: 'Signed by employee' });
+        }
+        else {
+          signatures.push({ toolId: signature.toolId, content: 'Employee declined to sign' });
+        }
+      }
+      return signatures;
+    };
 
     const interactWithModel = async (requestBody: ChatRequest, botMessageId: string): Promise<ChatResponse> => {
       while (true) {
@@ -350,7 +349,7 @@ Hello, **${employee.name}**, how can I help you today?`,
     } finally {
       setIsLoading(false);
     }
-  }, [inputMessage, isLoading, selectedEmployee, pendingBill, conversationId, sendToModel, handleSignatures, onRateLimitError]);
+  }, [inputMessage, isLoading, selectedEmployee, pendingBill, conversationId, onRateLimitError]);
 
   useEffect(() => {
     handleSendMessageRef.current = handleSendMessage;
