@@ -39,12 +39,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ onRateLimitError }
     title: '',
     description: ''
   });
-  const [isListening, setIsListening] = useState(false);
   const [isBillDialogOpen, setIsBillDialogOpen] = useState(false);
   const [pendingBill, setPendingBill] = useState<SampleBill | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const recognitionRef = useRef<any>(null);
-  const handleSendMessageRef = useRef<any>(null);
 
 
   const scrollToBottom = () => {
@@ -174,25 +171,6 @@ Hello, **${employee.name}**, how can I help you today?`,
   };
 
 
-  const speak = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.resume();
-      const cleanText = text.replace(/[#*`_~]/g, '');
-      const utterance = new SpeechSynthesisUtterance(cleanText);
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
-  const unlockSpeech = () => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.resume();
-      const utterance = new SpeechSynthesisUtterance('');
-      utterance.volume = 0;
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
   const handleSendMessage = useCallback(async (explicitMessage?: string) => {
     const messageToSend = explicitMessage || inputMessage;
     if (!messageToSend.trim() || isLoading || !selectedEmployee) return;
@@ -308,9 +286,6 @@ Hello, **${employee.name}**, how can I help you today?`,
           } : m
         ));
 
-        // Read the response aloud
-        speak(answer);
-
         if (response!.conversationId) {
           setConversationId(response!.conversationId);
         }
@@ -351,52 +326,6 @@ Hello, **${employee.name}**, how can I help you today?`,
     }
   }, [inputMessage, isLoading, selectedEmployee, pendingBill, conversationId, onRateLimitError]);
 
-  useEffect(() => {
-    handleSendMessageRef.current = handleSendMessage;
-  }, [handleSendMessage]);
-
-  useEffect(() => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = false;
-      recognitionRef.current.interimResults = false;
-      recognitionRef.current.lang = 'en-US';
-
-      recognitionRef.current.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        if (transcript && handleSendMessageRef.current) {
-          handleSendMessageRef.current(transcript);
-        }
-      };
-
-      recognitionRef.current.onend = () => {
-        setIsListening(false);
-      };
-
-      recognitionRef.current.onerror = (event: any) => {
-        console.error('Speech recognition error:', event.error);
-        setIsListening(false);
-      };
-    }
-
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-      }
-    };
-  }, [selectedEmployee, conversationId]);
-
-  const toggleListening = () => {
-    unlockSpeech();
-    if (isListening) {
-      recognitionRef.current?.stop();
-    } else {
-      setIsListening(true);
-      recognitionRef.current?.start();
-    }
-  };
-
   const handleFollowupClick = (followup: string) => {
     setInputMessage(followup);
   };
@@ -404,7 +333,6 @@ Hello, **${employee.name}**, how can I help you today?`,
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      unlockSpeech();
       handleSendMessage();
     }
   };
@@ -464,19 +392,7 @@ Hello, **${employee.name}**, how can I help you today?`,
               {message.isUser ? (
                 message.text
               ) : (
-                <>
-                  <ReactMarkdown>{message.text}</ReactMarkdown>
-                  <button 
-                    className="speak-button" 
-                    onClick={() => {
-                        unlockSpeech();
-                        speak(message.text);
-                    }}
-                    title="Read aloud"
-                  >
-                    Play Audio
-                  </button>
-                </>
+                <ReactMarkdown>{message.text}</ReactMarkdown>
               )}
             </div>
 
@@ -547,17 +463,8 @@ Hello, **${employee.name}**, how can I help you today?`,
             disabled={isLoading || !selectedEmployee}
           />
           <button
-            className={`voice-button ${isListening ? 'listening' : ''}`}
-            onClick={toggleListening}
-            disabled={isLoading || !selectedEmployee}
-            title={isListening ? "Listening..." : "Voice Input"}
-          >
-            🎤
-          </button>
-          <button
             className="send-button"
             onClick={() => {
-              unlockSpeech();
               handleSendMessage();
             }}
             disabled={isLoading || !inputMessage.trim() || !selectedEmployee}
