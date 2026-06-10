@@ -7,8 +7,8 @@
     <PackageVersion Include="Aspire.Hosting" Version="13.2.0" />
     <PackageVersion Include="Aspire.Hosting.Azure.Functions" Version="13.2.0" />
     <PackageVersion Include="Aspire.Hosting.NodeJs" Version="9.5.2" />
-    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.RavenDB" Version="13.2.1-beta.532" />
-    <PackageVersion Include="CommunityToolkit.Aspire.RavenDB.Client" Version="13.2.1-beta.532" />
+    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.RavenDB" Version="13.4.0" />
+    <PackageVersion Include="CommunityToolkit.Aspire.RavenDB.Client" Version="13.4.0" />
     <PackageVersion Include="CsvHelper" Version="33.1.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.WorkerService" Version="3.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
@@ -24,7 +24,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
-    <PackageVersion Include="RavenDB.Client" Version="7.2.2" />
+    <PackageVersion Include="RavenDB.Client" Version="7.2.3" />
     <PackageVersion Include="RavenMigrations" Version="6.0.2" />
   </ItemGroup>
 </Project>
