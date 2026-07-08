@@ -110,7 +110,8 @@ export const hrApi = {
           reject(new Error(`HTTP ${response.status}`));
         },
         onmessage(ev: EventSourceMessage) {
-          if (ev.event === 'final') {
+          if (ev.event === 'final' || ev.event === 'error') {
+            ctrl.abort();
             resolve(JSON.parse(ev.data));
           } else {
             onChunk(ev.data);
