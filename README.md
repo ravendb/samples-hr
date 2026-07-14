@@ -10,7 +10,9 @@ The app demonstrates **practical rate limiting powered by time series data**. By
 
 Finally, the app **showcases the depth of RavenDB's document extensions**. Whether we consider attachments to store employee signatures or vector search enables semantic querying of HR policies. All of these features work together in a single, cohesive database — no sidecars, no sync pipelines.
 
-![](.github/assets/samples_hr.png)
+
+<img width="2554" height="1266" alt="image" src="https://github.com/user-attachments/assets/3076ff2f-9138-4a7e-885a-ff0fc7b82f5c" />
+
 
 ## Features used
 
