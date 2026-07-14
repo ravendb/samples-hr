@@ -194,7 +194,10 @@ Hello, **${employee.name}**, how can I help you today?`,
       return await hrApi.chat(
         requestBody,
         (chunk: string) => {
-          botText += JSON.parse(chunk);
+          const parsed = JSON.parse(chunk);
+          botText = (parsed !== null && typeof parsed === 'object')
+            ? (parsed.answer ?? botText)
+            : botText + String(parsed);
           setMessages(prev => prev.map(m =>
             m.id === botMessageId ? { ...m, text: botText } : m
           ));
